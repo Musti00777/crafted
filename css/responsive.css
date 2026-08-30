@@ -1,0 +1,39 @@
+@media (max-width: 40rem) {
+  .site-header,
+  .site-main,
+  .site-footer {
+    width: min(100% - 2rem, var(--content-width));
+  }
+
+  .site-header {
+    min-height: 5rem;
+  }
+
+  .site-main {
+    padding-block: var(--space-5);
+  }
+
+  .hero-card {
+    border-radius: var(--radius-medium);
+  }
+
+  .framework-list {
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: var(--space-4);
+  }
+}
+
+@media (max-width: 24rem) {
+  .framework-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
