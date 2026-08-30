@@ -122,7 +122,8 @@
 }
 
 .idea-composer textarea,
-.form-field textarea {
+.form-field textarea,
+.form-field input {
   display: block;
   width: 100%;
   border: 1px solid transparent;
@@ -142,12 +143,14 @@
 }
 
 .idea-composer textarea:hover,
-.form-field textarea:hover {
+.form-field textarea:hover,
+.form-field input:hover {
   border-color: var(--color-border-strong);
 }
 
 .idea-composer textarea:focus,
-.form-field textarea:focus {
+.form-field textarea:focus,
+.form-field input:focus {
   border-color: var(--color-emerald);
   outline: none;
   background: var(--color-surface);
@@ -156,7 +159,9 @@
 
 .idea-composer textarea[aria-invalid="true"],
 .form-field textarea[aria-invalid="true"],
-.form-field--error textarea {
+.form-field input[aria-invalid="true"],
+.form-field--error textarea,
+.form-field--error input {
   border-color: var(--color-error);
   background: var(--color-error-soft);
 }
@@ -175,7 +180,7 @@ textarea::placeholder {
   padding: 0.75rem 1.1rem;
   border: 1px solid transparent;
   border-radius: var(--radius-small);
-  cursor: default;
+  cursor: pointer;
   font-size: 0.875rem;
   font-weight: 720;
   transition:
@@ -360,6 +365,103 @@ textarea::placeholder {
   min-height: 9rem;
   padding: 1rem;
   border-color: var(--color-border);
+}
+
+.form-field input {
+  min-height: 3.25rem;
+  padding: 0.8rem 1rem;
+  border-color: var(--color-border);
+}
+
+.form-field--compact {
+  margin-top: var(--space-5);
+}
+
+.option-fieldset {
+  min-width: 0;
+  margin: var(--space-5) 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.option-fieldset legend {
+  margin-bottom: var(--space-3);
+  color: var(--color-charcoal);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.choice-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.choice-chip {
+  display: inline-flex;
+  min-height: 2.75rem;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  color: var(--color-charcoal);
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 680;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.choice-chip:hover {
+  border-color: var(--color-emerald);
+  color: var(--color-emerald);
+}
+
+.choice-chip:active {
+  transform: translateY(1px);
+}
+
+.choice-chip--selected,
+.choice-chip--selected:hover {
+  border-color: var(--color-emerald);
+  background: var(--color-mint);
+  color: var(--color-emerald);
+}
+
+.choice-chip__check {
+  display: none;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.choice-chip--selected .choice-chip__check {
+  display: inline;
+}
+
+.wizard-ready {
+  display: grid;
+  gap: var(--space-1);
+  margin-top: var(--space-5);
+  padding: var(--space-4);
+  border: 1px solid var(--color-emerald-soft);
+  border-radius: var(--radius-small);
+  background: var(--color-mint);
+  color: var(--color-emerald-dark);
+}
+
+.wizard-ready strong {
+  font-size: 0.875rem;
+}
+
+.wizard-ready span {
+  font-size: 0.8125rem;
 }
 
 .field-message {

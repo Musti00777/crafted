@@ -30,6 +30,7 @@ p {
 }
 
 button,
+input,
 textarea {
   font: inherit;
 }

@@ -45,7 +45,7 @@
           </button>
         </nav>
 
-        <p class="sidebar__meta">Build 2 · UI shell</p>
+        <p class="sidebar__meta">Build 3 · CRAFT wizard</p>
       </aside>
 
       <main class="builder" id="main-content">
@@ -68,7 +68,11 @@
                 placeholder="Describe your idea..."
               ></textarea>
             </div>
-            <button class="button button--primary idea-composer__button" type="button">
+            <button
+              class="button button--primary idea-composer__button"
+              type="button"
+              data-action="start-wizard"
+            >
               Start CRAFT
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="m9 18 6-6-6-6" />
@@ -76,63 +80,12 @@
             </button>
           </section>
 
-          <nav class="stepper-wrap" aria-label="CRAFT progress">
-            <ol class="stepper">
-              <li class="stepper__item stepper__item--current" aria-current="step">
-                <span class="stepper__marker">C</span>
-                <span class="stepper__label">Context</span>
-              </li>
-              <li class="stepper__item stepper__item--upcoming">
-                <span class="stepper__marker">R</span>
-                <span class="stepper__label">Role</span>
-              </li>
-              <li class="stepper__item stepper__item--upcoming">
-                <span class="stepper__marker">A</span>
-                <span class="stepper__label">Action</span>
-              </li>
-              <li class="stepper__item stepper__item--upcoming">
-                <span class="stepper__marker">F</span>
-                <span class="stepper__label">Format</span>
-              </li>
-              <li class="stepper__item stepper__item--upcoming">
-                <span class="stepper__marker">T</span>
-                <span class="stepper__label">Tone</span>
-              </li>
-            </ol>
-          </nav>
+          <section class="wizard" data-wizard aria-label="CRAFT wizard" hidden>
+            <nav class="stepper-wrap" aria-label="CRAFT progress">
+              <ol class="stepper" data-stepper></ol>
+            </nav>
 
-          <section class="builder-card" aria-labelledby="context-title">
-            <header class="builder-card__header">
-              <p class="step-kicker"><span>C</span> Context</p>
-              <h2 id="context-title">What’s useful to know?</h2>
-              <p>
-                Add the background, audience, or situation that will help make the
-                result more relevant.
-              </p>
-            </header>
-
-            <div class="form-field">
-              <label for="context-input">Context details</label>
-              <textarea
-                id="context-input"
-                name="context"
-                rows="6"
-                placeholder="Example: I run a small online shop and I’m planning a spring product launch for returning customers."
-              ></textarea>
-              <p class="field-message field-message--error" aria-live="polite">
-                Add a little more detail before continuing.
-              </p>
-            </div>
-
-            <footer class="builder-card__actions">
-              <button class="button button--secondary" type="button">Skip</button>
-              <button class="button button--primary" type="button">
-                Continue
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="m9 18 6-6-6-6" />
-                </svg>
-              </button>
-            </footer>
+            <section class="builder-card" data-step-card></section>
           </section>
         </div>
       </main>

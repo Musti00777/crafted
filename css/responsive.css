@@ -140,6 +140,19 @@
     grid-template-columns: 1fr 1fr;
   }
 
+  .builder-card__actions--three .button--primary {
+    grid-column: 1 / -1;
+  }
+
+  .choice-chips {
+    gap: var(--space-2);
+  }
+
+  .choice-chip {
+    min-height: 2.75rem;
+    padding-inline: 0.85rem;
+  }
+
   .preview-reserved {
     grid-template-columns: minmax(0, 1fr);
   }
