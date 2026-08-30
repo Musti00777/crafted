@@ -5,7 +5,6 @@
 }
 
 html {
-  min-width: 20rem;
   min-height: 100%;
   background: var(--color-background);
   font-family: var(--font-sans);
@@ -18,16 +17,33 @@ body {
   min-height: 100vh;
   min-height: 100svh;
   margin: 0;
+  overflow-x: hidden;
   background: var(--color-background);
   color: var(--color-charcoal);
 }
 
 h1,
+h2,
+h3,
 p {
   margin-block: 0;
 }
 
-ul {
+button,
+textarea {
+  font: inherit;
+}
+
+button {
+  border: 0;
+}
+
+textarea {
+  resize: vertical;
+}
+
+ul,
+ol {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -38,9 +54,20 @@ a {
   text-decoration: none;
 }
 
+svg {
+  display: block;
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
 :focus-visible {
   outline: 0.1875rem solid var(--color-emerald);
-  outline-offset: 0.25rem;
+  outline-offset: 0.1875rem;
 }
 
 ::selection {

@@ -18,34 +18,193 @@
   </head>
   <body>
     <div class="app-shell" data-app data-status="loading">
-      <header class="site-header">
+      <header class="mobile-header">
         <a class="brand" href="./" aria-label="CRAFTED home">
           <span class="brand__mark" aria-hidden="true">C</span>
           <span class="brand__name">CRAFTED</span>
         </a>
+        <button class="icon-button" type="button" aria-label="Open navigation">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16" />
+          </svg>
+        </button>
       </header>
 
-      <main class="site-main">
-        <section class="hero-card" aria-labelledby="hero-title">
-          <p class="eyebrow">Thoughtful prompts, made simple</p>
-          <h1 id="hero-title">Let’s <span>CRAFT</span> your idea.</h1>
-          <p class="hero-card__subtitle">
-            Turn your idea into a clear, structured prompt.
-          </p>
+      <aside class="sidebar" aria-label="Primary navigation">
+        <a class="brand" href="./" aria-label="CRAFTED home">
+          <span class="brand__mark" aria-hidden="true">C</span>
+          <span class="brand__name">CRAFTED</span>
+        </a>
 
-          <ul class="framework-list" aria-label="The CRAFT framework">
-            <li><strong>C</strong><span>Context</span></li>
-            <li><strong>R</strong><span>Role</span></li>
-            <li><strong>A</strong><span>Action</span></li>
-            <li><strong>F</strong><span>Format</span></li>
-            <li><strong>T</strong><span>Tone</span></li>
-          </ul>
-        </section>
+        <nav class="sidebar__nav" aria-label="Workspace">
+          <button class="nav-item nav-item--active" type="button" aria-current="page">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            <span>Create</span>
+          </button>
+          <button class="nav-item" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 5h14v14H5zM8 9h8M8 13h5" />
+            </svg>
+            <span>Templates</span>
+          </button>
+          <button class="nav-item" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+            </svg>
+            <span>Settings</span>
+          </button>
+        </nav>
+
+        <p class="sidebar__meta">Build 2 · UI shell</p>
+      </aside>
+
+      <main class="builder" id="main-content">
+        <div class="builder__inner">
+          <header class="builder-hero">
+            <p class="eyebrow">Prompt builder</p>
+            <h1>Let’s <span>CRAFT</span> your idea.</h1>
+            <p class="builder-hero__subtitle">
+              Turn your idea into a clear, structured prompt.
+            </p>
+          </header>
+
+          <section class="idea-composer" aria-labelledby="idea-label">
+            <div class="idea-composer__field">
+              <label id="idea-label" for="idea-input">Your idea</label>
+              <textarea
+                id="idea-input"
+                name="idea"
+                rows="2"
+                placeholder="Describe your idea..."
+              ></textarea>
+            </div>
+            <button class="button button--primary idea-composer__button" type="button">
+              Start CRAFT
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m9 18 6-6-6-6" />
+              </svg>
+            </button>
+          </section>
+
+          <nav class="stepper-wrap" aria-label="CRAFT progress">
+            <ol class="stepper">
+              <li class="stepper__item stepper__item--current" aria-current="step">
+                <span class="stepper__marker">C</span>
+                <span class="stepper__label">Context</span>
+              </li>
+              <li class="stepper__item stepper__item--upcoming">
+                <span class="stepper__marker">R</span>
+                <span class="stepper__label">Role</span>
+              </li>
+              <li class="stepper__item stepper__item--upcoming">
+                <span class="stepper__marker">A</span>
+                <span class="stepper__label">Action</span>
+              </li>
+              <li class="stepper__item stepper__item--upcoming">
+                <span class="stepper__marker">F</span>
+                <span class="stepper__label">Format</span>
+              </li>
+              <li class="stepper__item stepper__item--upcoming">
+                <span class="stepper__marker">T</span>
+                <span class="stepper__label">Tone</span>
+              </li>
+            </ol>
+          </nav>
+
+          <section class="builder-card" aria-labelledby="context-title">
+            <header class="builder-card__header">
+              <p class="step-kicker"><span>C</span> Context</p>
+              <h2 id="context-title">What’s useful to know?</h2>
+              <p>
+                Add the background, audience, or situation that will help make the
+                result more relevant.
+              </p>
+            </header>
+
+            <div class="form-field">
+              <label for="context-input">Context details</label>
+              <textarea
+                id="context-input"
+                name="context"
+                rows="6"
+                placeholder="Example: I run a small online shop and I’m planning a spring product launch for returning customers."
+              ></textarea>
+              <p class="field-message field-message--error" aria-live="polite">
+                Add a little more detail before continuing.
+              </p>
+            </div>
+
+            <footer class="builder-card__actions">
+              <button class="button button--secondary" type="button">Skip</button>
+              <button class="button button--primary" type="button">
+                Continue
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </button>
+            </footer>
+          </section>
+        </div>
       </main>
 
-      <footer class="site-footer">
-        <p>CRAFTED <span aria-hidden="true">·</span> A clearer way to prompt.</p>
-      </footer>
+      <aside class="preview-panel" aria-labelledby="preview-title">
+        <div class="preview-panel__inner">
+          <header class="preview-panel__header">
+            <div>
+              <p class="eyebrow">Draft preview</p>
+              <h2 id="preview-title">Your CRAFTED Prompt</h2>
+            </div>
+            <span class="status-pill">Draft</span>
+          </header>
+
+          <section class="preview-empty" aria-label="Prompt preview empty state">
+            <span class="preview-empty__mark" aria-hidden="true">C</span>
+            <p>Your prompt will take shape as you move through CRAFT.</p>
+          </section>
+
+          <div class="preview-reserved" aria-label="Reserved prompt areas">
+            <section class="preview-section">
+              <header>
+                <h3>Improved prompt</h3>
+                <span>Coming later</span>
+              </header>
+              <div class="skeleton-lines" aria-hidden="true">
+                <i></i><i></i><i></i>
+              </div>
+            </section>
+
+            <section class="preview-section">
+              <header>
+                <h3>Suggestions</h3>
+                <span>Coming later</span>
+              </header>
+              <div class="reserved-chips" aria-hidden="true">
+                <i></i><i></i>
+              </div>
+            </section>
+
+            <section class="preview-section">
+              <header>
+                <h3>CRAFT Summary</h3>
+                <span>Coming later</span>
+              </header>
+              <div class="summary-grid" aria-hidden="true">
+                <i></i><i></i><i></i><i></i><i></i>
+              </div>
+            </section>
+          </div>
+
+          <button class="button button--secondary button--full" type="button" disabled>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 8h11v11H8zM5 16H4V5h11v1" />
+            </svg>
+            Copy Prompt
+          </button>
+        </div>
+      </aside>
     </div>
 
     <script type="module" src="./js/app.js"></script>

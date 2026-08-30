@@ -1,57 +1,67 @@
 .app-shell {
-  position: relative;
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-areas: "sidebar builder preview";
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(--preview-width);
   min-height: 100vh;
   min-height: 100svh;
-  overflow: hidden;
 }
 
-.app-shell::before,
-.app-shell::after {
-  position: absolute;
-  z-index: -1;
-  width: 22rem;
-  height: 22rem;
-  border-radius: 50%;
-  background: var(--color-mint);
-  content: "";
-  filter: blur(0.25rem);
-  opacity: 0.72;
+.mobile-header {
+  display: none;
+  grid-area: mobile-header;
 }
 
-.app-shell::before {
-  top: -12rem;
-  right: -8rem;
+.sidebar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  grid-area: sidebar;
+  flex-direction: column;
+  height: 100vh;
+  height: 100svh;
+  padding: var(--space-5);
+  border-right: 1px solid var(--color-border);
+  background: var(--color-surface);
 }
 
-.app-shell::after {
-  bottom: -15rem;
-  left: -10rem;
+.sidebar__nav {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-7);
 }
 
-.site-header,
-.site-main,
-.site-footer {
-  width: min(100% - 3rem, var(--content-width));
+.sidebar__meta {
+  margin-top: auto;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+}
+
+.builder {
+  grid-area: builder;
+  min-width: 0;
+  padding: clamp(2rem, 4vw, 4rem);
+}
+
+.builder__inner {
+  width: min(100%, var(--builder-width));
   margin-inline: auto;
 }
 
-.site-header {
+.preview-panel {
+  position: sticky;
+  top: 0;
+  grid-area: preview;
+  height: 100vh;
+  height: 100svh;
+  min-width: 0;
+  overflow-y: auto;
+  border-left: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.preview-panel__inner {
   display: flex;
-  align-items: center;
-  min-height: 6rem;
-}
-
-.site-main {
-  display: grid;
-  place-items: center;
-  padding-block: var(--space-7);
-}
-
-.site-footer {
-  padding-block: var(--space-5);
-  color: var(--color-muted);
-  font-size: 0.8125rem;
-  text-align: center;
+  min-height: 100%;
+  flex-direction: column;
+  padding: clamp(1.5rem, 2.5vw, 2rem);
 }
