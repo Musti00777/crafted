@@ -45,7 +45,7 @@
           </button>
         </nav>
 
-        <p class="sidebar__meta">Build 4 · Validation</p>
+        <p class="sidebar__meta">Build 5 · Draft preview</p>
       </aside>
 
       <main class="builder" id="main-content">
@@ -100,10 +100,11 @@
             <span class="status-pill">Draft</span>
           </header>
 
-          <section class="preview-empty" aria-label="Prompt preview empty state">
-            <span class="preview-empty__mark" aria-hidden="true">C</span>
-            <p>Your prompt will take shape as you move through CRAFT.</p>
-          </section>
+          <section
+            class="draft-preview preview-empty"
+            data-draft-preview
+            aria-label="Current draft preview"
+          ></section>
 
           <div class="preview-reserved" aria-label="Reserved prompt areas">
             <section class="preview-section">

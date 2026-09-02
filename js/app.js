@@ -1,4 +1,5 @@
 import { getNextStep, getPreviousStep } from "./navigation.js";
+import { renderDraftPreview } from "./preview.js";
 import { getState, toggleSelection, updateField, updateState } from "./state.js";
 import { validateAction } from "./validation.js";
 import { renderStep, renderStepper } from "./wizard.js";
@@ -9,12 +10,23 @@ const startButton = document.querySelector('[data-action="start-wizard"]');
 const wizard = document.querySelector("[data-wizard]");
 const stepper = document.querySelector("[data-stepper]");
 const stepCard = document.querySelector("[data-step-card]");
+const preview = document.querySelector("[data-draft-preview]");
 
-if (!appRoot || !ideaInput || !startButton || !wizard || !stepper || !stepCard) {
+if (
+  !appRoot ||
+  !ideaInput ||
+  !startButton ||
+  !wizard ||
+  !stepper ||
+  !stepCard ||
+  !preview
+) {
   throw new Error("CRAFTED could not find its application shell.");
 }
 
 let actionError = "";
+
+const renderPreview = (state = getState()) => renderDraftPreview(preview, state);
 
 const focusStepInput = () => {
   const focusTarget = stepCard.querySelector("[data-primary-input]");
@@ -87,7 +99,9 @@ const startWizard = () => {
 };
 
 ideaInput.value = getState().idea;
-ideaInput.addEventListener("input", () => updateField("idea", ideaInput.value));
+ideaInput.addEventListener("input", () => {
+  renderPreview(updateField("idea", ideaInput.value));
+});
 ideaInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
     event.preventDefault();
@@ -102,6 +116,7 @@ wizard.addEventListener("input", (event) => {
   if (!field) return;
 
   updateField(field, event.target.value);
+  renderPreview();
 
   if (
     field === "action" &&
@@ -141,6 +156,7 @@ wizard.addEventListener("click", (event) => {
     const isSelected = nextState[actionButton.dataset.field].includes(actionButton.dataset.value);
     actionButton.classList.toggle("choice-chip--selected", isSelected);
     actionButton.setAttribute("aria-pressed", String(isSelected));
+    renderPreview(nextState);
     return;
   }
 
@@ -169,4 +185,5 @@ wizard.addEventListener("click", (event) => {
 });
 
 renderWizard();
+renderPreview();
 appRoot.dataset.status = getState().status;
