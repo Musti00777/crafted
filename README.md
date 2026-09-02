@@ -3,15 +3,15 @@
 CRAFTED is a browser-based prompt-building app based on the CRAFT framework:
 Context, Role, Action, Format, and Tone.
 
-## Build 3: CRAFT Wizard + State + Navigation
+## Build 4: Validation
 
-This feature branch turns the approved UI shell into a functional five-step CRAFT
-wizard. It includes centralized in-memory state, Start CRAFT, forward/back/skip
-navigation, dynamic stepper states, persistent text and chip selections, and
-Ctrl/Cmd + Enter keyboard shortcuts.
+The app includes the five-step CRAFT wizard from Build 3 and adds focused,
+accessible validation for its only required field: Action. Empty or
+whitespace-only Action entries remain on the step and display an inline error;
+any non-whitespace value can continue to Format.
 
-Validation, prompt generation, improvement logic, suggestions, detection, CRAFT
-Summary logic, persistent browser storage, history, accounts, and clipboard
+Prompt generation, Draft Preview logic, improvement logic, suggestions, detection,
+CRAFT Summary logic, persistent browser storage, history, accounts, and clipboard
 behavior are intentionally not implemented yet.
 
 ## Run locally

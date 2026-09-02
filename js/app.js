@@ -1,5 +1,6 @@
 import { getNextStep, getPreviousStep } from "./navigation.js";
 import { getState, toggleSelection, updateField, updateState } from "./state.js";
+import { validateAction } from "./validation.js";
 import { renderStep, renderStepper } from "./wizard.js";
 
 const appRoot = document.querySelector("[data-app]");
@@ -13,6 +14,8 @@ if (!appRoot || !ideaInput || !startButton || !wizard || !stepper || !stepCard) 
   throw new Error("CRAFTED could not find its application shell.");
 }
 
+let actionError = "";
+
 const focusStepInput = () => {
   const focusTarget = stepCard.querySelector("[data-primary-input]");
   focusTarget?.focus({ preventScroll: true });
@@ -25,7 +28,7 @@ const renderWizard = ({ focusInput = false } = {}) => {
   if (!state.wizardStarted) return;
 
   renderStepper(stepper, state.currentStep);
-  renderStep(stepCard, state);
+  renderStep(stepCard, state, { action: actionError });
 
   if (focusInput) {
     requestAnimationFrame(focusStepInput);
@@ -33,6 +36,7 @@ const renderWizard = ({ focusInput = false } = {}) => {
 };
 
 const moveToStep = (step) => {
+  if (step !== "action") actionError = "";
   updateState({ currentStep: step, improvementReady: false });
   renderWizard({ focusInput: true });
 };
@@ -46,6 +50,16 @@ const showReadyForImprovement = () => {
 const performPrimaryAction = () => {
   const state = getState();
 
+  if (state.currentStep === "action") {
+    const result = validateAction(state.action);
+    actionError = result.message;
+
+    if (!result.isValid) {
+      renderWizard({ focusInput: true });
+      return;
+    }
+  }
+
   if (state.currentStep === "tone") {
     showReadyForImprovement();
     return;
@@ -55,6 +69,7 @@ const performPrimaryAction = () => {
 };
 
 const startWizard = () => {
+  actionError = "";
   updateState({
     idea: ideaInput.value,
     wizardStarted: true,
@@ -84,7 +99,24 @@ startButton.addEventListener("click", startWizard);
 
 wizard.addEventListener("input", (event) => {
   const field = event.target.dataset.stateField;
-  if (field) updateField(field, event.target.value);
+  if (!field) return;
+
+  updateField(field, event.target.value);
+
+  if (
+    field === "action" &&
+    actionError &&
+    validateAction(event.target.value).isValid
+  ) {
+    actionError = "";
+    event.target.removeAttribute("aria-invalid");
+    event.target.removeAttribute("aria-describedby");
+    event.target.closest(".form-field")?.classList.remove("form-field--error");
+    event.target
+      .closest(".form-field")
+      ?.querySelector("[data-validation-message]")
+      ?.remove();
+  }
 });
 
 wizard.addEventListener("keydown", (event) => {

@@ -14,8 +14,13 @@ const escapeHtml = (value) =>
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
 
-const renderTextField = (step, config, value) => `
-  <div class="form-field">
+const renderTextField = (step, config, value, errorMessage = "") => {
+  const hasError = Boolean(errorMessage);
+  const errorId = `${step}-error`;
+  const describedBy = hasError ? ` aria-describedby="${errorId}"` : "";
+
+  return `
+  <div class="form-field${hasError ? " form-field--error" : ""}">
     <label for="${step}-input">${config.label}</label>
     <textarea
       id="${step}-input"
@@ -24,9 +29,16 @@ const renderTextField = (step, config, value) => `
       data-state-field="${step}"
       data-primary-input
       placeholder="${escapeHtml(config.placeholder)}"
+      ${hasError ? 'aria-invalid="true"' : ""}${describedBy}
     >${escapeHtml(value)}</textarea>
+    ${
+      hasError
+        ? `<p class="field-message field-message--error" id="${errorId}" role="alert" aria-live="polite" data-validation-message>${escapeHtml(errorMessage)}</p>`
+        : ""
+    }
   </div>
 `;
+};
 
 const renderChoiceChip = (field, option, selectedValues) => {
   const isSelected = selectedValues.includes(option);
@@ -123,12 +135,12 @@ export const renderStepper = (container, currentStep) => {
   }).join("");
 };
 
-export const renderStep = (container, state) => {
+export const renderStep = (container, state, validationErrors = {}) => {
   const step = state.currentStep;
   const config = STEP_CONFIG[step];
   const fields =
     config.type === "text"
-      ? renderTextField(step, config, state[step])
+      ? renderTextField(step, config, state[step], validationErrors[step])
       : renderChoiceFields(config, state);
 
   container.setAttribute("aria-labelledby", `${step}-title`);
