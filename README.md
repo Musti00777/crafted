@@ -3,21 +3,24 @@
 CRAFTED is a browser-based prompt-building app based on the CRAFT framework:
 Context, Role, Action, Format, and Tone.
 
-## Build 6: Category Detection
+## Build 7: Improvement Engine
 
 The app includes the existing CRAFT wizard, Action validation, and live Draft
-Preview. Build 6 adds deterministic, local category detection for interview,
-communication, learning, social, business, and general prompts. Detection uses
-English and German phrases and keywords from Idea, Context, Role, and Action.
+Preview. Build 7 adds a deterministic, local analysis engine that evaluates the
+current CRAFT fields and returns structured findings with stable rule IDs,
+severities, fields, types, and messages. Category-specific rule packs cover
+interview, communication, learning, social, business, and general prompts.
 
-Strong phrases receive more weight than individual keywords. Weak evidence and
-top-score ties return the conservative `general` fallback. Format and Tone do not
-participate in classification, and the detected category is not displayed or
-persisted yet.
+The engine reuses local category detection and applies rules in a documented
+order: structural issues, category-specific gaps, generic quality issues, then
+optional refinements. It derives its result without mutating or persisting state.
+Rules only identify useful missing information; they do not invent context or
+claim probabilistic confidence.
 
-Prompt improvement, language detection, suggestions, CRAFT Summary logic,
-persistent browser storage, history, accounts, and clipboard behavior are
-intentionally not implemented yet.
+Improved prompt generation, language detection, suggestions, CRAFT Summary
+logic, persistent browser storage, history, accounts, and clipboard behavior are
+intentionally not implemented yet. Build 7 does not expose analysis findings in
+the UI; they prepare data for later builds.
 
 ## Run locally
 

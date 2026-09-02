@@ -37,6 +37,10 @@ export const categories = Object.freeze([
     id: "communication",
     label: "Communication",
     strongTerms: [
+      "write an email",
+      "write an e mail",
+      "schreibe eine email",
+      "schreibe eine e mail",
       "follow up email",
       "follow up e mail",
       "customer message",
