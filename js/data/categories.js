@@ -1,9 +1,16 @@
-const defineCategory = ({ id, label, strongTerms = [], keywords = [] }) =>
+const defineCategory = ({
+  id,
+  label,
+  strongTerms = [],
+  keywords = [],
+  requestPrefixes = [],
+}) =>
   Object.freeze({
     id,
     label,
     strongTerms: Object.freeze(strongTerms),
     keywords: Object.freeze(keywords),
+    requestPrefixes: Object.freeze(requestPrefixes),
   });
 
 export const categories = Object.freeze([
@@ -63,6 +70,15 @@ export const categories = Object.freeze([
   defineCategory({
     id: "learning",
     label: "Learning",
+    requestPrefixes: [
+      "explain",
+      "explain to me",
+      "teach",
+      "teach me",
+      "erkläre",
+      "erklaere",
+      "bring mir bei",
+    ],
     strongTerms: [
       "study for an exam",
       "learning plan",
@@ -92,9 +108,12 @@ export const categories = Object.freeze([
     label: "Social",
     strongTerms: [
       "social media",
+      "social post",
       "linkedin post",
       "instagram post",
       "content creator",
+      "caption",
+      "reel",
     ],
     keywords: [
       "tiktok",

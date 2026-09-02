@@ -134,16 +134,22 @@ test("learning analysis finds missing topic and level without inventing either",
   assert.ok(analysis.findings.every(({ message }) => !message.includes("neural")));
 });
 
+test("clear explanatory requests use the learning rule pack", () => {
+  for (const action of ["Explain neural networks", "Erkläre neuronale Netze"]) {
+    assert.equal(analyzePrompt({ action }).category, "learning");
+  }
+});
+
 test("social analysis identifies a missing platform", () => {
   const analysis = analyzePrompt({
-    action: "Create a caption and post for product awareness",
+    action: "Create a caption for product awareness",
   });
 
   assert.equal(analysis.category, "social");
   assert.ok(hasFinding(analysis, "social-platform-missing"));
 });
 
-test("business analysis identifies audience, purpose, scope, and format gaps", () => {
+test("business analysis respects an explicit report format while finding other gaps", () => {
   const analysis = analyzePrompt({
     action: "Create a management report with KPI analysis",
   });
@@ -152,6 +158,15 @@ test("business analysis identifies audience, purpose, scope, and format gaps", (
   assert.ok(hasFinding(analysis, "business-audience-missing"));
   assert.ok(hasFinding(analysis, "business-purpose-missing"));
   assert.ok(hasFinding(analysis, "business-scope-missing"));
+  assert.equal(hasFinding(analysis, "business-format-missing"), false);
+});
+
+test("business analysis still flags a missing output format when none is named", () => {
+  const analysis = analyzePrompt({
+    action: "Analyze KPI trends for management to support a decision",
+  });
+
+  assert.equal(analysis.category, "business");
   assert.ok(hasFinding(analysis, "business-format-missing"));
 });
 

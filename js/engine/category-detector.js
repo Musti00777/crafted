@@ -9,6 +9,7 @@ export const CATEGORY_INPUT_FIELDS = Object.freeze([
 
 export const CATEGORY_SCORING = Object.freeze({
   strongTerm: 3,
+  requestPrefix: 2,
   keyword: 1,
   minimumSpecializedScore: 2,
 });
@@ -32,7 +33,7 @@ const includesTerm = (text, term) => {
   return normalizedTerm && ` ${text} `.includes(` ${normalizedTerm} `);
 };
 
-const scoreCategory = (category, text) => {
+const scoreCategory = (category, text, requestMatches = []) => {
   const strongMatches = category.strongTerms.filter((term) =>
     includesTerm(text, term),
   );
@@ -44,18 +45,33 @@ const scoreCategory = (category, text) => {
     category: category.id,
     score:
       strongMatches.length * CATEGORY_SCORING.strongTerm +
+      requestMatches.length * CATEGORY_SCORING.requestPrefix +
       keywordMatches.length * CATEGORY_SCORING.keyword,
     strongMatchCount: strongMatches.length,
-    matchedTerms: [...strongMatches, ...keywordMatches],
+    requestMatchCount: requestMatches.length,
+    matchedTerms: [
+      ...new Set([...strongMatches, ...requestMatches, ...keywordMatches]),
+    ],
   };
 };
 
-const confidenceFor = ({ score, strongMatchCount, matchedTerms }) => {
+const confidenceFor = ({
+  score,
+  strongMatchCount,
+  requestMatchCount,
+  matchedTerms,
+}) => {
   if (strongMatchCount >= 2 || (score >= 5 && matchedTerms.length >= 3)) {
     return "high";
   }
 
-  if (strongMatchCount >= 1 || matchedTerms.length >= 3) return "medium";
+  if (
+    strongMatchCount >= 1 ||
+    requestMatchCount >= 1 ||
+    matchedTerms.length >= 3
+  ) {
+    return "medium";
+  }
   return "low";
 };
 
@@ -69,9 +85,37 @@ export const detectCategory = (state = {}) => {
   const text = collectDetectionText(state);
   if (!text) return generalResult();
 
-  const results = categories
-    .filter(({ id }) => id !== "general")
-    .map((category) => scoreCategory(category, text));
+  const specializedCategories = categories.filter(({ id }) => id !== "general");
+  const baseResults = specializedCategories.map((category) =>
+    scoreCategory(category, text),
+  );
+  const action = normalizeCategoryText(state?.action);
+  const results = specializedCategories.map((category, index) => {
+    const hasStrongCompetingEvidence = baseResults.some(
+      (result) =>
+        result.category !== category.id &&
+        result.score >= CATEGORY_SCORING.minimumSpecializedScore,
+    );
+    const requestMatch = hasStrongCompetingEvidence
+      ? ""
+      : [...category.requestPrefixes]
+          .sort((left, right) => right.length - left.length)
+          .find((prefix) => {
+            const normalizedPrefix = normalizeCategoryText(prefix);
+            const remainder = action.slice(normalizedPrefix.length).trim();
+            return (
+              action.startsWith(`${normalizedPrefix} `) &&
+              remainder &&
+              !["this", "something", "it", "das", "etwas"].includes(
+                remainder,
+              )
+            );
+          });
+
+    return requestMatch
+      ? scoreCategory(category, text, [requestMatch])
+      : baseResults[index];
+  });
   const highestScore = Math.max(...results.map(({ score }) => score));
 
   if (highestScore < CATEGORY_SCORING.minimumSpecializedScore) {

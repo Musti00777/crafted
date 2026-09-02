@@ -629,16 +629,20 @@ export const rules = Object.freeze([
       conditions: [
         { kind: "field-missing", field: "format" },
         {
-          kind: "signal-present",
+          kind: "signal-missing",
           scope: ["idea", "context", "action"],
           terms: [
             "report",
-            "analysis",
+            "management report",
             "presentation",
             "dashboard",
+            "executive summary",
+            "table",
             "bericht",
-            "analyse",
+            "managementbericht",
             "präsentation",
+            "zusammenfassung für die geschäftsleitung",
+            "tabelle",
           ],
         },
       ],

@@ -33,8 +33,32 @@ test("detects learning", () => {
   );
 });
 
+test("detects clear explanatory learning requests in English and German", () => {
+  for (const action of [
+    "Explain neural networks",
+    "Explain photosynthesis",
+    "Explain recursion",
+    "Erkläre neuronale Netze",
+    "Erkläre Photosynthese",
+  ]) {
+    assert.equal(categoryFor(action), "learning");
+  }
+});
+
+test("keeps a stronger category when an explanatory request overlaps", () => {
+  assert.equal(
+    categoryFor("Explain the delay in a follow-up email"),
+    "communication",
+  );
+});
+
 test("detects social content", () => {
   assert.equal(categoryFor("Create an Instagram caption for my new post"), "social");
+});
+
+test("treats a clear social output as sufficient evidence", () => {
+  assert.equal(categoryFor("Create a caption for product awareness"), "social");
+  assert.equal(categoryFor("Create content for product awareness"), "general");
 });
 
 test("detects business reporting", () => {
