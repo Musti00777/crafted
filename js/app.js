@@ -1,4 +1,6 @@
 import { getNextStep, getPreviousStep } from "./navigation.js";
+import { createImprovementLoop } from "./improvement-loop.js";
+import { renderImprovementResult } from "./improvement-view.js";
 import { renderDraftPreview } from "./preview.js";
 import { getState, toggleSelection, updateField, updateState } from "./state.js";
 import { validateAction } from "./validation.js";
@@ -11,6 +13,12 @@ const wizard = document.querySelector("[data-wizard]");
 const stepper = document.querySelector("[data-stepper]");
 const stepCard = document.querySelector("[data-step-card]");
 const preview = document.querySelector("[data-draft-preview]");
+const metaPrompt = document.querySelector("[data-improved-prompt]");
+const suggestions = document.querySelector("[data-suggestions]");
+const metaStatus = document.querySelector("[data-improved-status]");
+const suggestionStatus = document.querySelector("[data-suggestions-status]");
+const previewEyebrow = document.querySelector("[data-preview-eyebrow]");
+const previewStatus = document.querySelector("[data-preview-status]");
 
 if (
   !appRoot ||
@@ -19,7 +27,13 @@ if (
   !wizard ||
   !stepper ||
   !stepCard ||
-  !preview
+  !preview ||
+  !metaPrompt ||
+  !suggestions ||
+  !metaStatus ||
+  !suggestionStatus ||
+  !previewEyebrow ||
+  !previewStatus
 ) {
   throw new Error("CRAFTED could not find its application shell.");
 }
@@ -53,11 +67,44 @@ const moveToStep = (step) => {
   renderWizard({ focusInput: true });
 };
 
-const showReadyForImprovement = () => {
+const scrollWizardIntoView = () => {
+  wizard.scrollIntoView({
+    block: "start",
+    behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? "auto"
+      : "smooth",
+  });
+};
+
+const revealStep = (step) => {
+  moveToStep(step);
+  scrollWizardIntoView();
+};
+
+const showImprovementResult = () => {
   updateState({ improvementReady: true });
   renderWizard();
   stepCard.querySelector("[data-ready-status]")?.focus({ preventScroll: true });
 };
+
+const improvementLoop = createImprovementLoop({
+  readState: getState,
+  navigateToStep: revealStep,
+  renderResult: (result) => {
+    renderImprovementResult(
+      {
+        metaPrompt,
+        suggestions,
+        metaStatus,
+        suggestionStatus,
+        previewEyebrow,
+        previewStatus,
+      },
+      result,
+    );
+    showImprovementResult();
+  },
+});
 
 const performPrimaryAction = () => {
   const state = getState();
@@ -73,7 +120,7 @@ const performPrimaryAction = () => {
   }
 
   if (state.currentStep === "tone") {
-    showReadyForImprovement();
+    improvementLoop.run();
     return;
   }
 
@@ -90,12 +137,7 @@ const startWizard = () => {
   });
 
   renderWizard({ focusInput: true });
-  wizard.scrollIntoView({
-    block: "start",
-    behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      ? "auto"
-      : "smooth",
-  });
+  scrollWizardIntoView();
 };
 
 ideaInput.value = getState().idea;
@@ -167,7 +209,7 @@ wizard.addEventListener("click", (event) => {
 
   if (action === "skip") {
     if (state.currentStep === "tone") {
-      showReadyForImprovement();
+      improvementLoop.run();
     } else {
       moveToStep(getNextStep(state.currentStep));
     }
@@ -180,8 +222,19 @@ wizard.addEventListener("click", (event) => {
   }
 
   if (action === "improve") {
-    showReadyForImprovement();
+    improvementLoop.run();
   }
+});
+
+suggestions.addEventListener("click", (event) => {
+  const suggestionButton = event.target.closest(
+    'button[data-action="open-suggestion"]',
+  );
+  if (!suggestionButton) return;
+
+  improvementLoop.selectSuggestion({
+    field: suggestionButton.dataset.suggestionField,
+  });
 });
 
 renderWizard();

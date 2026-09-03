@@ -613,6 +613,84 @@ textarea::placeholder {
   font-size: 0.62rem;
 }
 
+.improved-prompt,
+[data-suggestions] {
+  margin-top: var(--space-3);
+}
+
+.improved-prompt__text {
+  overflow-wrap: anywhere;
+  color: var(--color-charcoal);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.improvement-empty-message {
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.suggestion-list {
+  display: grid;
+  gap: var(--space-2);
+  padding: 0;
+  list-style: none;
+}
+
+.suggestion-card {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  min-height: 3.5rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+  background: var(--color-background);
+  color: var(--color-charcoal);
+  cursor: pointer;
+  text-align: left;
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.suggestion-card:hover {
+  border-color: var(--color-emerald);
+  background: var(--color-mint);
+}
+
+.suggestion-card:active {
+  transform: translateY(1px);
+}
+
+.suggestion-card__field {
+  grid-column: 1;
+  color: var(--color-emerald);
+  font-size: 0.65rem;
+  font-weight: 760;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.suggestion-card__message {
+  grid-column: 1;
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.suggestion-card__arrow {
+  grid-row: 1 / 3;
+  grid-column: 2;
+  align-self: center;
+  color: var(--color-emerald);
+  font-weight: 760;
+}
+
 .skeleton-lines,
 .reserved-chips,
 .summary-grid {

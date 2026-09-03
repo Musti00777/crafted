@@ -3,7 +3,7 @@
 CRAFTED is a browser-based prompt-building app based on the CRAFT framework:
 Context, Role, Action, Format, and Tone.
 
-## Build 9: Suggestions + Prioritization
+## Build 10: Edit → Improve Loop
 
 The app includes the existing CRAFT wizard, Action validation, and live Draft
 Preview. Build 8 includes a deterministic, local meta-prompt generator that turns a
@@ -35,10 +35,21 @@ ignored. New analysis rules therefore need matching bilingual suggestion copy.
 Suggestions ask for missing information; they never supply assumed facts, rewrite
 input, mutate state/analysis, or update fields automatically.
 
-The Edit → Improve loop, CRAFT Summary logic,
-persistent browser storage, history, accounts, and clipboard enhancements are
-intentionally not implemented yet. Generators remain engine APIs in this build;
-existing UI behavior is unchanged.
+Build 10 connects these modules through `createImprovementLoop()`. Every Improve
+Prompt action reads the current CRAFT state, creates a fresh analysis, regenerates
+the Meta-Prompt, derives Suggestions from that same analysis, and replaces the
+previous result. The controller keeps only the latest result and has no API for
+accepting an old analysis snapshot.
+
+The preview panel now displays the generated Meta-Prompt and up to four current
+Suggestions. Each Suggestion is a keyboard-accessible button linked to one CRAFT
+field. Selecting it uses the existing wizard navigation and focuses that field;
+it never applies copy or changes user input. The user edits manually and can run
+Improve Prompt again as many times as needed in the current browser session.
+
+CRAFT Summary logic, final Copy Prompt functionality, persistent browser storage,
+history, accounts, automatic field completion, and automatic rewriting remain
+intentionally unimplemented.
 
 ## Tests
 

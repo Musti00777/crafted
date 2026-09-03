@@ -45,7 +45,7 @@
           </button>
         </nav>
 
-        <p class="sidebar__meta">Build 5 · Draft preview</p>
+        <p class="sidebar__meta">Build 10 · Edit and improve</p>
       </aside>
 
       <main class="builder" id="main-content">
@@ -94,10 +94,10 @@
         <div class="preview-panel__inner">
           <header class="preview-panel__header">
             <div>
-              <p class="eyebrow">Draft preview</p>
+              <p class="eyebrow" data-preview-eyebrow>Draft preview</p>
               <h2 id="preview-title">Your CRAFTED Prompt</h2>
             </div>
-            <span class="status-pill">Draft</span>
+            <span class="status-pill" data-preview-status>Draft</span>
           </header>
 
           <section
@@ -106,24 +106,28 @@
             aria-label="Current draft preview"
           ></section>
 
-          <div class="preview-reserved" aria-label="Reserved prompt areas">
-            <section class="preview-section">
+          <div class="preview-reserved" aria-label="Prompt details">
+            <section class="preview-section" aria-labelledby="improved-prompt-title">
               <header>
-                <h3>Improved prompt</h3>
-                <span>Coming later</span>
+                <h3 id="improved-prompt-title">Improved prompt</h3>
+                <span data-improved-status>Run Improve Prompt</span>
               </header>
-              <div class="skeleton-lines" aria-hidden="true">
-                <i></i><i></i><i></i>
+              <div class="improved-prompt" data-improved-prompt aria-live="polite">
+                <p class="improvement-empty-message">
+                  Your improved prompt will appear after an Improvement Run.
+                </p>
               </div>
             </section>
 
-            <section class="preview-section">
+            <section class="preview-section" aria-labelledby="suggestions-title">
               <header>
-                <h3>Suggestions</h3>
-                <span>Coming later</span>
+                <h3 id="suggestions-title">Suggestions</h3>
+                <span data-suggestions-status>Run Improve Prompt</span>
               </header>
-              <div class="reserved-chips" aria-hidden="true">
-                <i></i><i></i>
+              <div data-suggestions aria-live="polite">
+                <p class="improvement-empty-message">
+                  Suggestions will point you to fields you can improve manually.
+                </p>
               </div>
             </section>
 

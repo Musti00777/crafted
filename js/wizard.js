@@ -114,8 +114,8 @@ const renderReadyState = (state) =>
   state.improvementReady
     ? `
       <div class="wizard-ready" role="status" tabindex="-1" data-ready-status>
-        <strong>Ready for improvement</strong>
-        <span>Your CRAFT inputs are saved. Prompt improvement will be added in a later build.</span>
+        <strong>Prompt improved</strong>
+        <span>Your latest result is ready. Select a suggestion to edit a linked CRAFT field.</span>
       </div>
     `
     : "";
