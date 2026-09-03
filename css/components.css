@@ -22,8 +22,7 @@
   letter-spacing: 0;
 }
 
-.nav-item,
-.icon-button {
+.nav-item {
   display: inline-flex;
   min-height: 2.75rem;
   align-items: center;
@@ -53,8 +52,7 @@
   color: var(--color-charcoal);
 }
 
-.nav-item:active,
-.icon-button:active {
+.nav-item:active {
   transform: translateY(1px);
 }
 

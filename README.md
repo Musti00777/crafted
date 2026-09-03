@@ -3,7 +3,7 @@
 CRAFTED is a browser-based prompt-building app based on the CRAFT framework:
 Context, Role, Action, Format, and Tone.
 
-## Build 11: CRAFT Summary + Copy Prompt
+## Build 12: Tests + Responsive Polish
 
 The app includes the existing CRAFT wizard, Action validation, and live Draft
 Preview. Build 8 includes a deterministic, local meta-prompt generator that turns a
@@ -63,6 +63,16 @@ message; failures are contained without false success feedback or dependencies.
 CRAFT Summary and Copy Prompt are now implemented. Persistent browser storage,
 history, accounts, reset/new-prompt behavior, export, sharing, automatic field
 completion, and automatic rewriting remain intentionally unimplemented.
+
+Build 12 is the pre-deployment quality gate. The complete CRAFT workflow was
+regression-tested with keyboard navigation, repeated Edit → Improve cycles,
+clipboard success and failure handling, and long English and German content.
+The responsive shell was verified at 1440px, 1024px, 768px, 390px, and 360px
+without horizontal overflow or clipped controls. The inactive mobile menu control
+was removed, and the current Create navigation item now uses link semantics.
+
+No product intelligence, persistence, deployment configuration, API, backend,
+database, framework, external service, or runtime dependency was added.
 
 ## Tests
 
