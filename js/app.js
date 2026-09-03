@@ -1,6 +1,15 @@
 import { getNextStep, getPreviousStep } from "./navigation.js";
+import { createCraftSummary } from "./craft-summary.js";
+import {
+  COPY_FEEDBACK,
+  createPromptCopyController,
+  isPromptCopyAvailable,
+} from "./copy-prompt.js";
 import { createImprovementLoop } from "./improvement-loop.js";
-import { renderImprovementResult } from "./improvement-view.js";
+import {
+  renderCraftSummary,
+  renderImprovementResult,
+} from "./improvement-view.js";
 import { renderDraftPreview } from "./preview.js";
 import { getState, toggleSelection, updateField, updateState } from "./state.js";
 import { validateAction } from "./validation.js";
@@ -19,6 +28,10 @@ const metaStatus = document.querySelector("[data-improved-status]");
 const suggestionStatus = document.querySelector("[data-suggestions-status]");
 const previewEyebrow = document.querySelector("[data-preview-eyebrow]");
 const previewStatus = document.querySelector("[data-preview-status]");
+const summary = document.querySelector("[data-craft-summary]");
+const copyButton = document.querySelector("[data-copy-prompt]");
+const copyLabel = document.querySelector("[data-copy-label]");
+const copyFeedback = document.querySelector("[data-copy-feedback]");
 
 if (
   !appRoot ||
@@ -33,7 +46,11 @@ if (
   !metaStatus ||
   !suggestionStatus ||
   !previewEyebrow ||
-  !previewStatus
+  !previewStatus ||
+  !summary ||
+  !copyButton ||
+  !copyLabel ||
+  !copyFeedback
 ) {
   throw new Error("CRAFTED could not find its application shell.");
 }
@@ -41,6 +58,32 @@ if (
 let actionError = "";
 
 const renderPreview = (state = getState()) => renderDraftPreview(preview, state);
+const renderSummary = (state = getState()) =>
+  renderCraftSummary(summary, createCraftSummary(state));
+
+const readVisibleMetaPrompt = () =>
+  metaPrompt.querySelector(".improved-prompt__text")?.textContent ?? "";
+
+const setCopyFeedback = (feedback) => {
+  copyButton.dataset.feedback = feedback.state;
+  copyLabel.textContent = feedback.label;
+  copyFeedback.textContent = feedback.message;
+};
+
+const promptCopier = createPromptCopyController({
+  readVisiblePrompt: readVisibleMetaPrompt,
+  writeText: (text) => {
+    if (!navigator.clipboard?.writeText) {
+      return Promise.reject(new Error("Clipboard API unavailable"));
+    }
+    return navigator.clipboard.writeText(text);
+  },
+  onFeedback: setCopyFeedback,
+});
+
+const syncCopyAvailability = () => {
+  copyButton.disabled = !isPromptCopyAvailable(readVisibleMetaPrompt());
+};
 
 const focusStepInput = () => {
   const focusTarget = stepCard.querySelector("[data-primary-input]");
@@ -99,9 +142,12 @@ const improvementLoop = createImprovementLoop({
         suggestionStatus,
         previewEyebrow,
         previewStatus,
+        summary,
       },
       result,
     );
+    promptCopier.resetFeedback();
+    syncCopyAvailability();
     showImprovementResult();
   },
 });
@@ -159,6 +205,7 @@ wizard.addEventListener("input", (event) => {
 
   updateField(field, event.target.value);
   renderPreview();
+  renderSummary();
 
   if (
     field === "action" &&
@@ -199,6 +246,7 @@ wizard.addEventListener("click", (event) => {
     actionButton.classList.toggle("choice-chip--selected", isSelected);
     actionButton.setAttribute("aria-pressed", String(isSelected));
     renderPreview(nextState);
+    renderSummary(nextState);
     return;
   }
 
@@ -237,6 +285,13 @@ suggestions.addEventListener("click", (event) => {
   });
 });
 
+copyButton.addEventListener("click", () => {
+  void promptCopier.copy();
+});
+
 renderWizard();
 renderPreview();
+renderSummary();
+setCopyFeedback(COPY_FEEDBACK.idle);
+syncCopyAvailability();
 appRoot.dataset.status = getState().status;

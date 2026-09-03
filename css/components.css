@@ -691,6 +691,46 @@ textarea::placeholder {
   font-weight: 760;
 }
 
+.craft-summary {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.craft-summary__item {
+  display: flex;
+  min-width: 0;
+  gap: var(--space-3);
+  align-items: center;
+  justify-content: space-between;
+  padding-block: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.craft-summary__item:last-child {
+  border-bottom: 0;
+}
+
+.craft-summary__field,
+.craft-summary__status {
+  font-size: 0.72rem;
+}
+
+.craft-summary__field {
+  color: var(--color-charcoal);
+  font-weight: 680;
+}
+
+.craft-summary__status {
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+
+.craft-summary__status--used {
+  color: var(--color-emerald);
+  font-weight: 720;
+}
+
 .skeleton-lines,
 .reserved-chips,
 .summary-grid {

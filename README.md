@@ -3,7 +3,7 @@
 CRAFTED is a browser-based prompt-building app based on the CRAFT framework:
 Context, Role, Action, Format, and Tone.
 
-## Build 10: Edit → Improve Loop
+## Build 11: CRAFT Summary + Copy Prompt
 
 The app includes the existing CRAFT wizard, Action validation, and live Draft
 Preview. Build 8 includes a deterministic, local meta-prompt generator that turns a
@@ -47,9 +47,22 @@ field. Selecting it uses the existing wizard navigation and focuses that field;
 it never applies copy or changes user input. The user edits manually and can run
 Improve Prompt again as many times as needed in the current browser session.
 
-CRAFT Summary logic, final Copy Prompt functionality, persistent browser storage,
-history, accounts, automatic field completion, and automatic rewriting remain
-intentionally unimplemented.
+Build 11 completes the current result panel with a neutral CRAFT Summary and plain
+text copying. The Summary always lists Context, Role, Action, Format, and Tone as
+`Used` or `Not used`. Status comes directly from the existing
+`analysis.craft[field].provided` values, so the Summary adds no scoring, advice,
+or inferred information. It refreshes as the user edits the current CRAFT state.
+
+Copy Prompt stays disabled until a non-empty improved prompt is visible. Copy reads
+that rendered prompt at click time and sends exactly that text to the browser's
+Clipboard API. As a result, edits made before another Improvement Run do not
+silently change the copied text, while a later run automatically becomes the new
+copy source. Success and failure use temporary button text plus an accessible live
+message; failures are contained without false success feedback or dependencies.
+
+CRAFT Summary and Copy Prompt are now implemented. Persistent browser storage,
+history, accounts, reset/new-prompt behavior, export, sharing, automatic field
+completion, and automatic rewriting remain intentionally unimplemented.
 
 ## Tests
 

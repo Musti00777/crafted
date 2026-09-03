@@ -52,9 +52,34 @@ const renderSuggestions = (container, suggestions) => {
   container.replaceChildren(list);
 };
 
+export const renderCraftSummary = (container, summary) => {
+  const list = container.ownerDocument.createElement("ul");
+  list.className = "craft-summary";
+
+  summary.forEach(({ label, used }) => {
+    const item = container.ownerDocument.createElement("li");
+    const field = container.ownerDocument.createElement("span");
+    const status = container.ownerDocument.createElement("span");
+
+    item.className = "craft-summary__item";
+    field.className = "craft-summary__field";
+    field.textContent = label;
+    status.className = `craft-summary__status craft-summary__status--${
+      used ? "used" : "unused"
+    }`;
+    status.textContent = used ? "Used" : "Not used";
+
+    item.append(field, status);
+    list.append(item);
+  });
+
+  container.replaceChildren(list);
+};
+
 export const renderImprovementResult = (elements, result) => {
   renderMetaPrompt(elements.metaPrompt, result.metaPrompt);
   renderSuggestions(elements.suggestions, result.suggestions);
+  renderCraftSummary(elements.summary, result.summary);
   elements.metaStatus.textContent = "Latest run";
   elements.suggestionStatus.textContent = `${result.suggestions.length} current`;
   elements.previewEyebrow.textContent = "Improvement result";

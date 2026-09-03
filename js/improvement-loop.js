@@ -1,4 +1,5 @@
 import { STEP_ORDER } from "./navigation.js";
+import { createCraftSummaryFromAnalysis } from "./craft-summary.js";
 import { analyzePrompt } from "./engine/improvement-engine.js";
 import { generateMetaPrompt } from "./engine/prompt-generator.js";
 import { generateSuggestions } from "./engine/suggestion-engine.js";
@@ -15,6 +16,7 @@ export const createImprovementResult = (state = {}) => {
     analysis,
     metaPrompt: generateMetaPrompt(state),
     suggestions: generateSuggestions(state, analysis),
+    summary: createCraftSummaryFromAnalysis(analysis),
   };
 };
 

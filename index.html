@@ -45,7 +45,7 @@
           </button>
         </nav>
 
-        <p class="sidebar__meta">Build 10 · Edit and improve</p>
+        <p class="sidebar__meta">Build 11 · Complete result</p>
       </aside>
 
       <main class="builder" id="main-content">
@@ -131,23 +131,27 @@
               </div>
             </section>
 
-            <section class="preview-section">
+            <section class="preview-section" aria-labelledby="summary-title">
               <header>
-                <h3>CRAFT Summary</h3>
-                <span>Coming later</span>
+                <h3 id="summary-title">CRAFT Summary</h3>
+                <span>Current state</span>
               </header>
-              <div class="summary-grid" aria-hidden="true">
-                <i></i><i></i><i></i><i></i><i></i>
-              </div>
+              <div data-craft-summary></div>
             </section>
           </div>
 
-          <button class="button button--secondary button--full" type="button" disabled>
+          <button
+            class="button button--secondary button--full"
+            type="button"
+            data-copy-prompt
+            disabled
+          >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M8 8h11v11H8zM5 16H4V5h11v1" />
             </svg>
-            Copy Prompt
+            <span data-copy-label>Copy Prompt</span>
           </button>
+          <span class="visually-hidden" data-copy-feedback aria-live="polite"></span>
         </div>
       </aside>
     </div>
