@@ -1,14 +1,18 @@
 export const COPY_FEEDBACK = Object.freeze({
-  idle: Object.freeze({ state: "idle", label: "Copy Prompt", message: "" }),
+  idle: Object.freeze({
+    state: "idle",
+    label: "Copy Meta-Prompt",
+    message: "",
+  }),
   success: Object.freeze({
     state: "success",
     label: "Copied",
-    message: "Improved prompt copied to the clipboard.",
+    message: "Improved Meta-Prompt copied to the clipboard.",
   }),
   error: Object.freeze({
     state: "error",
     label: "Copy failed",
-    message: "The improved prompt could not be copied. Please try again.",
+    message: "The improved Meta-Prompt could not be copied. Please try again.",
   }),
 });
 

@@ -16,6 +16,17 @@ test("detects an English interview prompt", () => {
   assert.equal(categoryFor("Help me prepare for job interviews"), "interview");
 });
 
+test("detects job-search intent from the starting idea alone", () => {
+  assert.equal(
+    detectCategory({ idea: "I am searching a new job." }).category,
+    "interview",
+  );
+  assert.equal(
+    detectCategory({ idea: "Ich suche einen neuen Job." }).category,
+    "interview",
+  );
+});
+
 test("detects a German interview prompt", () => {
   assert.equal(
     categoryFor("Hilf mir bei der Vorbereitung auf ein Vorstellungsgespräch"),

@@ -27,18 +27,14 @@ export const generateMetaPrompt = (state = {}) => {
   const language = detectLanguage(state);
   const fragments = promptFragments[language] ?? promptFragments[DEFAULT_LANGUAGE];
 
-  return META_PROMPT_FIELD_ORDER.map((field) => ({
-    field,
+  const sections = META_PROMPT_FIELD_ORDER.map((field) => ({
     label: fragments[field],
     content: contentFor(analysis.craft, field),
   }))
     .filter(({ content }) => content)
-    .map(({ field, label, content }) =>
-      field === "action"
-        ? `${label}\n${fragments.actionInstruction}\n${content}`
-        : `${label}\n${content}`,
-    )
-    .join("\n\n");
+    .map(({ label, content }) => `${label}\n${content}`);
+
+  return [...sections, fragments.guardrail].join("\n\n");
 };
 
 export const promptGenerator = Object.freeze({ generateMetaPrompt });
