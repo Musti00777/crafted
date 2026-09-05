@@ -3,6 +3,29 @@
 CRAFTED is a browser-based prompt-building app based on the CRAFT framework:
 Context, Role, Action, Format, and Tone.
 
+## Build 13: GitHub Pages Deployment
+
+CRAFTED MVP is live at:
+
+**https://musti00777.github.io/crafted/**
+
+GitHub Pages deploys the static application from the `main` branch and repository
+root. The initial production deployment was verified at commit
+`bf6d7d4113d82778c45e74a6b732cde8c084d12f`.
+
+To use CRAFTED, enter an idea, move through the Context, Role, Action, Format, and
+Tone steps, then select **Improve Prompt**. Review the generated prompt,
+Suggestions, and CRAFT Summary; select a Suggestion to edit its linked field, or
+use **Copy Prompt** to copy the latest visible improved prompt.
+
+CRAFTED uses static HTML, CSS, and Vanilla JavaScript ES Modules. All detection,
+validation, improvement, generation, and suggestion logic runs deterministically
+in the browser. Hosting and the application architecture remain fully Zero Cost:
+there is no backend, database, external API, paid service, or runtime dependency.
+
+Current limitations: there are no accounts, cloud persistence, prompt history,
+export, or semantic AI/LLM integration. The session resets when the page refreshes.
+
 ## Build 12: Tests + Responsive Polish
 
 The app includes the existing CRAFT wizard, Action validation, and live Draft
@@ -76,9 +99,9 @@ database, framework, external service, or runtime dependency was added.
 
 ## Tests
 
-Run `node --test` from the `crafted` directory. The suite uses Node's built-in
-test runner without npm packages. Run `node --check <file>` for JavaScript syntax
-checks and `git diff --check` for whitespace errors.
+Run `node --test` from the `crafted` directory. The 102-test suite uses Node's
+built-in test runner without npm packages. Run `node --check <file>` for
+JavaScript syntax checks and `git diff --check` for whitespace errors.
 
 ## Run locally
 
