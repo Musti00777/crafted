@@ -3,6 +3,20 @@
 CRAFTED is a browser-based prompt-building app based on the CRAFT framework:
 Context, Role, Action, Format, and Tone.
 
+## Build 14: Improvement Quality Pass
+
+Build 14 corrects the UAT false negative for mixed-language job-interview
+prompts. Clear interview evidence such as `career coach` and plural
+`job interviews` now selects the existing interview rule pack. A broad request
+for interview preparation no longer counts as a concrete desired outcome;
+CRAFTED asks the user to choose an outcome such as practice questions, model
+answers, feedback, a plan, or a checklist instead.
+
+The generated Meta-Prompt keeps Action first, adds a deterministic execution
+instruction, and uses action-oriented section labels. User content remains
+unchanged, no missing context is inferred, and all behavior stays local and
+dependency-free.
+
 ## Build 12: Tests + Responsive Polish
 
 The app includes the existing CRAFT wizard, Action validation, and live Draft
@@ -11,9 +25,9 @@ valid CRAFT state into one structured prompt string. Action is always first;
 Idea, Context, Role, Format, and Tone appear only when the user supplied them.
 
 The generator reuses the existing Improvement Engine snapshot, preserves the
-user's wording, and adds only deterministic structural labels. A small local
-language detector selects English or German labels; ties and uncertain input
-fall back to English. No user state is mutated or persisted.
+user's wording, and adds only deterministic instructions and structural labels.
+A small local language detector selects English or German copy; ties and
+uncertain input fall back to English. No user state is mutated or persisted.
 
 Build 9 adds `generateSuggestions(state, analysis = analyzePrompt(state))` in
 `js/engine/suggestion-engine.js`. The optional analysis must be a snapshot for
@@ -77,8 +91,9 @@ database, framework, external service, or runtime dependency was added.
 ## Tests
 
 Run `node --test` from the `crafted` directory. The suite uses Node's built-in
-test runner without npm packages. Run `node --check <file>` for JavaScript syntax
-checks and `git diff --check` for whitespace errors.
+test runner without npm packages. Build 14 has 105 tests. Run `node --check
+<file>` for JavaScript syntax checks and `git diff --check` for whitespace
+errors.
 
 ## Run locally
 

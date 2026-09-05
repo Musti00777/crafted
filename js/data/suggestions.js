@@ -31,8 +31,8 @@ export const suggestions = Object.freeze([
   defineSuggestion(
     "interview-goal-missing",
     "action-interview-outcome",
-    "Specify in Action what you want from the interview preparation.",
-    "Beschreibe im Feld Action, welches Ergebnis du von der Gesprächsvorbereitung erwartest.",
+    "Specify in Action whether you want practice questions, model answers, a mock interview, feedback, or a preparation plan.",
+    "Lege im Feld Action fest, ob du Übungsfragen, Beispielantworten, ein Probeinterview, Feedback oder einen Vorbereitungsplan möchtest.",
   ),
   defineSuggestion(
     "communication-recipient-missing",

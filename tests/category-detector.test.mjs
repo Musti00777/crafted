@@ -13,6 +13,7 @@ test("detects an English interview prompt", () => {
     categoryFor("Help me prepare for a job interview with a hiring manager"),
     "interview",
   );
+  assert.equal(categoryFor("Help me prepare for job interviews"), "interview");
 });
 
 test("detects a German interview prompt", () => {
@@ -20,6 +21,19 @@ test("detects a German interview prompt", () => {
     categoryFor("Hilf mir bei der Vorbereitung auf ein Vorstellungsgespräch"),
     "interview",
   );
+});
+
+test("detects the mixed-language interview signals from UAT", () => {
+  const result = detectCategory({
+    idea: "ich suche einen neuen Job",
+    context: "Ich arbeite als Business Analyst bei einer Bank.",
+    role: "Du bist ein career coach.",
+    action: "Hilf mir für die Vorbereitung für den Interviews.",
+  });
+
+  assert.equal(result.category, "interview");
+  assert.ok(result.matchedTerms.includes("career coach"));
+  assert.ok(result.matchedTerms.includes("interviews"));
 });
 
 test("detects communication", () => {
