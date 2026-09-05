@@ -12,6 +12,9 @@ test("Copy is unavailable before a valid visible Meta-Prompt exists", () => {
     assert.equal(isPromptCopyAvailable(value), false);
   }
   assert.equal(isPromptCopyAvailable("Task\nDraft the update"), true);
+  assert.equal(COPY_FEEDBACK.idle.label, "Copy Meta-Prompt");
+  assert.match(COPY_FEEDBACK.success.message, /Meta-Prompt/);
+  assert.match(COPY_FEEDBACK.error.message, /Meta-Prompt/);
 });
 
 test("Copy writes exactly the currently visible Meta-Prompt", async () => {

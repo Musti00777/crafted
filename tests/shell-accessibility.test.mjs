@@ -21,3 +21,13 @@ test("current Create navigation uses link semantics", () => {
   );
   assert.doesNotMatch(html, /<button class="nav-item nav-item--active"/);
 });
+
+test("the result is explicitly identified as a Meta-Prompt", () => {
+  assert.match(
+    html,
+    /<h3 id="improved-prompt-title">Improved Meta-Prompt<\/h3>/,
+  );
+  assert.match(html, /Your improved Meta-Prompt will appear/);
+  assert.match(html, /<span data-copy-label>Copy Meta-Prompt<\/span>/);
+  assert.match(html, /Build 15 · Quality checked/);
+});

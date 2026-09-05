@@ -3,13 +3,19 @@ import test from "node:test";
 
 import { generateMetaPrompt } from "../js/engine/prompt-generator.js";
 
+const EN_GUARDRAIL =
+  "Treat the provided details as authoritative. Do not silently assume missing requirements; ask a focused clarification question when one is essential.";
+const DE_GUARDRAIL =
+  "Behandle die bereitgestellten Angaben als verbindlich. Ergänze fehlende Anforderungen nicht stillschweigend; stelle eine gezielte Rückfrage, wenn eine Angabe wesentlich ist.";
+
 test("generates a non-empty Action-first prompt from Action only", () => {
   assert.equal(
     generateMetaPrompt({ action: "Write a launch plan" }),
     [
-      "Task",
-      "Complete the following task using the supplied requirements:",
+      "Complete the following task:",
       "Write a launch plan",
+      "",
+      EN_GUARDRAIL,
     ].join("\n"),
   );
 });
@@ -21,12 +27,13 @@ test("places Action before supplied Context", () => {
       action: "Draft the announcement",
     }),
     [
-      "Task",
-      "Complete the following task using the supplied requirements:",
+      "Complete the following task:",
       "Draft the announcement",
       "",
-      "Relevant context",
+      "Take this context into account:",
       "The launch is scheduled for Monday.",
+      "",
+      EN_GUARDRAIL,
     ].join("\n"),
   );
 });
@@ -41,21 +48,22 @@ test("integrates every populated CRAFT field", () => {
       tone: ["Professional", "Friendly"],
     }),
     [
-      "Task",
-      "Complete the following task using the supplied requirements:",
+      "Complete the following task:",
       "Draft a product launch announcement",
       "",
-      "Relevant context",
+      "Take this context into account:",
       "The audience consists of returning customers.",
       "",
-      "Role to adopt",
+      "Adopt this role:",
       "An experienced product marketer",
       "",
-      "Required output format",
+      "Return the result in this format:",
       "Bullet points, Short paragraphs",
       "",
-      "Required tone",
+      "Use this tone:",
       "Professional, Friendly",
+      "",
+      EN_GUARDRAIL,
     ].join("\n"),
   );
 });
@@ -69,13 +77,14 @@ test("preserves the starting idea and custom selections when supplied", () => {
     customTone: "Calm and direct",
   });
 
-  assert.ok(output.includes("Starting point\nA weekly project update"));
+  assert.ok(output.includes("Use this as the starting point:\nA weekly project update"));
   assert.ok(
     output.includes(
-      "Required output format\nBullet points, One closing paragraph",
+      "Return the result in this format:\nBullet points, One closing paragraph",
     ),
   );
-  assert.ok(output.includes("Required tone\nCalm and direct"));
+  assert.ok(output.includes("Use this tone:\nCalm and direct"));
+  assert.ok(output.endsWith(EN_GUARDRAIL));
 });
 
 test("omits missing optional fields without empty labels or filler", () => {
@@ -83,14 +92,14 @@ test("omits missing optional fields without empty labels or filler", () => {
 
   assert.equal(
     output,
-    "Task\nComplete the following task using the supplied requirements:\nSummarize the supplied notes",
+    `Complete the following task:\nSummarize the supplied notes\n\n${EN_GUARDRAIL}`,
   );
   for (const label of [
-    "Starting point",
-    "Relevant context",
-    "Role to adopt",
-    "Required output format",
-    "Required tone",
+    "Use this as the starting point:",
+    "Take this context into account:",
+    "Adopt this role:",
+    "Return the result in this format:",
+    "Use this tone:",
   ]) {
     assert.equal(output.includes(label), false);
   }
@@ -105,18 +114,19 @@ test("uses German structure for German input", () => {
       tone: ["Freundlich"],
     }),
     [
-      "Aufgabe",
-      "Führe die folgende Aufgabe anhand der bereitgestellten Anforderungen aus:",
+      "Führe die folgende Aufgabe aus:",
       "Erkläre neuronale Netze",
       "",
-      "Relevanter Kontext",
+      "Berücksichtige diesen Kontext:",
       "Für eine Schulklasse ohne Vorkenntnisse",
       "",
-      "Gewünschtes Ausgabeformat",
+      "Liefere das Ergebnis in diesem Format:",
       "Schritt für Schritt",
       "",
-      "Gewünschter Ton",
+      "Verwende diesen Ton:",
       "Freundlich",
+      "",
+      DE_GUARDRAIL,
     ].join("\n"),
   );
 });
@@ -129,14 +139,14 @@ test("uses English structure for English input", () => {
 
   assert.equal(
     output,
-    "Task\nComplete the following task using the supplied requirements:\nExplain neural networks\n\nRequired tone\nFriendly",
+    `Complete the following task:\nExplain neural networks\n\nUse this tone:\nFriendly\n\n${EN_GUARDRAIL}`,
   );
 });
 
 test("falls back to English when language evidence is uncertain", () => {
   assert.equal(
     generateMetaPrompt({ action: "Plan Q3" }),
-    "Task\nComplete the following task using the supplied requirements:\nPlan Q3",
+    `Complete the following task:\nPlan Q3\n\n${EN_GUARDRAIL}`,
   );
 });
 
@@ -146,7 +156,7 @@ test("does not introduce unsupported facts", () => {
 
   assert.equal(
     output,
-    `Task\nComplete the following task using the supplied requirements:\n${action}`,
+    `Complete the following task:\n${action}\n\n${EN_GUARDRAIL}`,
   );
   for (const inventedValue of [
     "company",
@@ -157,6 +167,36 @@ test("does not introduce unsupported facts", () => {
   ]) {
     assert.equal(output.includes(inventedValue), false);
   }
+});
+
+test("the UAT input becomes an executable Meta-Prompt without invented context", () => {
+  const state = {
+    idea: "I am searching a new job.",
+    context:
+      "I am working at a bank as business manager. I have compliance experience.",
+    role: "An experienced HR person and head hunter.",
+    action: "Train me for my interviews and coach me with helpful information.",
+    format: ["Step-by-step"],
+    tone: ["Professional"],
+  };
+  const output = generateMetaPrompt(state);
+
+  assert.match(output, /^Complete the following task:/);
+  assert.match(output, /Adopt this role:/);
+  assert.match(output, /Take this context into account:/);
+  assert.match(output, /Return the result in this format:/);
+  assert.match(output, /ask a focused clarification question/);
+  for (const value of [
+    state.idea,
+    state.context,
+    state.role,
+    state.action,
+    ...state.format,
+    ...state.tone,
+  ]) {
+    assert.equal(output.split(value).length - 1, 1);
+  }
+  assert.doesNotMatch(output, /Acme|Senior Product Designer|Monday/);
 });
 
 test("returns an empty string when the required Action is missing", () => {

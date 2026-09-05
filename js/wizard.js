@@ -1,4 +1,5 @@
 import { STEP_CONFIG, STEP_ORDER, getStepStatus } from "./navigation.js";
+import { getContextualExamples } from "./engine/example-engine.js";
 
 const arrowIcon = `
   <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -13,6 +14,16 @@ const escapeHtml = (value) =>
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+
+export const getContextualStepConfig = (step, state = {}) => {
+  const config = STEP_CONFIG[step];
+  if (!config) return null;
+
+  const example = getContextualExamples(state).fields[step];
+  return config.type === "text"
+    ? { ...config, placeholder: example }
+    : { ...config, customPlaceholder: example };
+};
 
 const renderTextField = (step, config, value, errorMessage = "") => {
   const hasError = Boolean(errorMessage);
@@ -137,7 +148,7 @@ export const renderStepper = (container, currentStep) => {
 
 export const renderStep = (container, state, validationErrors = {}) => {
   const step = state.currentStep;
-  const config = STEP_CONFIG[step];
+  const config = getContextualStepConfig(step, state);
   const fields =
     config.type === "text"
       ? renderTextField(step, config, state[step], validationErrors[step])

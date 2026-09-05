@@ -3,6 +3,21 @@
 CRAFTED is a browser-based prompt-building app based on the CRAFT framework:
 Context, Role, Action, Format, and Tone.
 
+## Build 15: Meta-Prompt + Contextual Examples
+
+Build 15 turns the Improvement result into an explicit, executable Meta-Prompt.
+Each supplied CRAFT field is introduced as an instruction, Action remains first,
+and a final guardrail tells the receiving AI to ask a focused clarification
+question instead of silently assuming an essential missing requirement. The UI
+labels the result as `Improved Meta-Prompt` so Draft Preview and final output are
+clearly distinguishable.
+
+Wizard examples now come from a deterministic local example engine. It classifies
+the starting Idea only, selects English or German copy, and supplies relevant
+Context, Role, Action, custom Format, and custom Tone examples for interview/job
+search, communication, learning, social, business, or a neutral fallback. The
+examples remain placeholders and never become user data automatically.
+
 ## Build 14: Improvement Quality Pass
 
 Build 14 corrects the UAT false negative for mixed-language job-interview
@@ -67,14 +82,14 @@ text copying. The Summary always lists Context, Role, Action, Format, and Tone a
 `analysis.craft[field].provided` values, so the Summary adds no scoring, advice,
 or inferred information. It refreshes as the user edits the current CRAFT state.
 
-Copy Prompt stays disabled until a non-empty improved prompt is visible. Copy reads
+Copy Meta-Prompt stays disabled until a non-empty improved prompt is visible. Copy reads
 that rendered prompt at click time and sends exactly that text to the browser's
 Clipboard API. As a result, edits made before another Improvement Run do not
 silently change the copied text, while a later run automatically becomes the new
 copy source. Success and failure use temporary button text plus an accessible live
 message; failures are contained without false success feedback or dependencies.
 
-CRAFT Summary and Copy Prompt are now implemented. Persistent browser storage,
+CRAFT Summary and Copy Meta-Prompt are implemented. Persistent browser storage,
 history, accounts, reset/new-prompt behavior, export, sharing, automatic field
 completion, and automatic rewriting remain intentionally unimplemented.
 
@@ -91,7 +106,7 @@ database, framework, external service, or runtime dependency was added.
 ## Tests
 
 Run `node --test` from the `crafted` directory. The suite uses Node's built-in
-test runner without npm packages. Build 14 has 105 tests. Run `node --check
+test runner without npm packages. Build 15 has 114 tests. Run `node --check
 <file>` for JavaScript syntax checks and `git diff --check` for whitespace
 errors.
 
