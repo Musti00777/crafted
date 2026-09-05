@@ -6,7 +6,11 @@ import { generateMetaPrompt } from "../js/engine/prompt-generator.js";
 test("generates a non-empty Action-first prompt from Action only", () => {
   assert.equal(
     generateMetaPrompt({ action: "Write a launch plan" }),
-    "Task\nWrite a launch plan",
+    [
+      "Task",
+      "Complete the following task using the supplied requirements:",
+      "Write a launch plan",
+    ].join("\n"),
   );
 });
 
@@ -18,9 +22,10 @@ test("places Action before supplied Context", () => {
     }),
     [
       "Task",
+      "Complete the following task using the supplied requirements:",
       "Draft the announcement",
       "",
-      "Context",
+      "Relevant context",
       "The launch is scheduled for Monday.",
     ].join("\n"),
   );
@@ -37,18 +42,19 @@ test("integrates every populated CRAFT field", () => {
     }),
     [
       "Task",
+      "Complete the following task using the supplied requirements:",
       "Draft a product launch announcement",
       "",
-      "Context",
+      "Relevant context",
       "The audience consists of returning customers.",
       "",
-      "Role",
+      "Role to adopt",
       "An experienced product marketer",
       "",
-      "Output format",
+      "Required output format",
       "Bullet points, Short paragraphs",
       "",
-      "Tone",
+      "Required tone",
       "Professional, Friendly",
     ].join("\n"),
   );
@@ -63,23 +69,28 @@ test("preserves the starting idea and custom selections when supplied", () => {
     customTone: "Calm and direct",
   });
 
-  assert.ok(output.includes("Starting idea\nA weekly project update"));
+  assert.ok(output.includes("Starting point\nA weekly project update"));
   assert.ok(
-    output.includes("Output format\nBullet points, One closing paragraph"),
+    output.includes(
+      "Required output format\nBullet points, One closing paragraph",
+    ),
   );
-  assert.ok(output.includes("Tone\nCalm and direct"));
+  assert.ok(output.includes("Required tone\nCalm and direct"));
 });
 
 test("omits missing optional fields without empty labels or filler", () => {
   const output = generateMetaPrompt({ action: "Summarize the supplied notes" });
 
-  assert.equal(output, "Task\nSummarize the supplied notes");
+  assert.equal(
+    output,
+    "Task\nComplete the following task using the supplied requirements:\nSummarize the supplied notes",
+  );
   for (const label of [
-    "Starting idea",
-    "Context",
-    "Role",
-    "Output format",
-    "Tone",
+    "Starting point",
+    "Relevant context",
+    "Role to adopt",
+    "Required output format",
+    "Required tone",
   ]) {
     assert.equal(output.includes(label), false);
   }
@@ -95,15 +106,16 @@ test("uses German structure for German input", () => {
     }),
     [
       "Aufgabe",
+      "Führe die folgende Aufgabe anhand der bereitgestellten Anforderungen aus:",
       "Erkläre neuronale Netze",
       "",
-      "Kontext",
+      "Relevanter Kontext",
       "Für eine Schulklasse ohne Vorkenntnisse",
       "",
-      "Ausgabeformat",
+      "Gewünschtes Ausgabeformat",
       "Schritt für Schritt",
       "",
-      "Ton",
+      "Gewünschter Ton",
       "Freundlich",
     ].join("\n"),
   );
@@ -115,18 +127,27 @@ test("uses English structure for English input", () => {
     tone: ["Friendly"],
   });
 
-  assert.equal(output, "Task\nExplain neural networks\n\nTone\nFriendly");
+  assert.equal(
+    output,
+    "Task\nComplete the following task using the supplied requirements:\nExplain neural networks\n\nRequired tone\nFriendly",
+  );
 });
 
 test("falls back to English when language evidence is uncertain", () => {
-  assert.equal(generateMetaPrompt({ action: "Plan Q3" }), "Task\nPlan Q3");
+  assert.equal(
+    generateMetaPrompt({ action: "Plan Q3" }),
+    "Task\nComplete the following task using the supplied requirements:\nPlan Q3",
+  );
 });
 
 test("does not introduce unsupported facts", () => {
   const action = "Summarize the notes";
   const output = generateMetaPrompt({ action });
 
-  assert.equal(output, `Task\n${action}`);
+  assert.equal(
+    output,
+    `Task\nComplete the following task using the supplied requirements:\n${action}`,
+  );
   for (const inventedValue of [
     "company",
     "audience",

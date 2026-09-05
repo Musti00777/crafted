@@ -28,11 +28,16 @@ export const generateMetaPrompt = (state = {}) => {
   const fragments = promptFragments[language] ?? promptFragments[DEFAULT_LANGUAGE];
 
   return META_PROMPT_FIELD_ORDER.map((field) => ({
+    field,
     label: fragments[field],
     content: contentFor(analysis.craft, field),
   }))
     .filter(({ content }) => content)
-    .map(({ label, content }) => `${label}\n${content}`)
+    .map(({ field, label, content }) =>
+      field === "action"
+        ? `${label}\n${fragments.actionInstruction}\n${content}`
+        : `${label}\n${content}`,
+    )
     .join("\n\n");
 };
 

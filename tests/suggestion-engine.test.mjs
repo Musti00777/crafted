@@ -169,6 +169,30 @@ test("does not collapse distinct Context gaps into one suggestion", () => {
   assert.notEqual(result[0].id, result[1].id);
 });
 
+test("the complete five-field UAT input still receives actionable gaps", () => {
+  const state = {
+    idea: "ich suche einen neuen Job",
+    context:
+      "Ich arbeite als Business Analyst bei einer Bank. Ich suche neue Herausforderungen.",
+    role: "Du bist ein career coach.",
+    action: "Hilf mir für die Vorbereitung für den Interviews.",
+    format: ["Step-by-step"],
+    tone: ["Professional"],
+  };
+  const result = generateSuggestions(state);
+
+  assert.deepEqual(ids(result), [
+    "interview-position-missing",
+    "interview-goal-missing",
+  ]);
+  assert.equal(
+    result[1].message,
+    "Lege im Feld Action fest, ob du Übungsfragen, Beispielantworten, ein Probeinterview, Feedback oder einen Vorbereitungsplan möchtest.",
+  );
+  assert.ok(result.every(({ message }) => !message.includes("Acme")));
+  assert.deepEqual(result, generateSuggestions(state));
+});
+
 test("strong prompts stop without filler and a single refinement stays single", () => {
   const general = { action: "Convert these recipe measurements from cups to grams" };
   const communication = {

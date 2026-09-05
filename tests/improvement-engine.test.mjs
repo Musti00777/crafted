@@ -103,6 +103,41 @@ test("interview analysis identifies gaps and rewards complete context", () => {
   assert.equal(hasFinding(complete, "interview-format-missing"), false);
 });
 
+test("interview preparation alone does not count as a concrete outcome", () => {
+  const incomplete = analyzePrompt({
+    idea: "ich suche einen neuen Job",
+    context: "Ich arbeite als Business Analyst bei einer Bank.",
+    role: "Du bist ein career coach.",
+    action: "Hilf mir für die Vorbereitung für den Interviews.",
+    format: ["Step-by-step"],
+    tone: ["Professional"],
+  });
+
+  assert.equal(incomplete.category, "interview");
+  assert.ok(hasFinding(incomplete, "interview-goal-missing"));
+  assert.equal(hasFinding(incomplete, "interview-company-missing"), false);
+  assert.equal(
+    hasFinding(
+      analyzePrompt({
+        role: "Du bist ein career coach.",
+        action: "Erstelle Fragen und Antworten für die Interviews.",
+      }),
+      "interview-goal-missing",
+    ),
+    false,
+  );
+  assert.equal(
+    hasFinding(
+      analyzePrompt({
+        role: "Du bist ein career coach.",
+        action: "Erstelle einen Plan für die Interviews.",
+      }),
+      "interview-goal-missing",
+    ),
+    false,
+  );
+});
+
 test("communication analysis finds missing recipient and purpose", () => {
   const incomplete = analyzePrompt({ action: "Write an email" });
   const complete = analyzePrompt({

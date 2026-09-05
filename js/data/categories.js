@@ -19,10 +19,12 @@ export const categories = Object.freeze([
     label: "Interview",
     strongTerms: [
       "job interview",
+      "job interviews",
       "hiring manager",
       "role interview",
       "interview preparation",
       "career preparation",
+      "career coach",
       "vorstellungsgespräch",
       "bewerbungsgespräch",
     ],
@@ -38,6 +40,7 @@ export const categories = Object.freeze([
       "candidate",
       "kandidat",
       "position",
+      "interviews",
     ],
   }),
   defineCategory({
